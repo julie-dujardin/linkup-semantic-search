@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from lxml import etree
+from lxml import etree, html
 import requests
 
 
@@ -21,8 +21,9 @@ class RssParser:
         for e in root.xpath("channel/item"):
             data.append({
                 "source": feed,
-                "title": str(e.xpath("title/text()")[0]),
-                "description": str(e.xpath("description/text()")[0]),
+                "title": str(e.xpath("title/text()")[0]).strip(),
+                "description": str(e.xpath("description/text()")[0]).strip(),
+                "article": html.fromstring(e.xpath('content:encoded/text()', namespaces={'content': 'http://purl.org/rss/1.0/modules/content/'})[0]).text_content(),
                 "url": str(e.xpath("link/text()")[0]),
                 "creator": str(e.xpath("dc:creator/text()", namespaces={'dc': 'http://purl.org/dc/elements/1.1/'})[0]),
                 "published_at": datetime.strptime(e.xpath("pubDate/text()")[0], "%a, %d %b %Y %H:%M:%S %z"),

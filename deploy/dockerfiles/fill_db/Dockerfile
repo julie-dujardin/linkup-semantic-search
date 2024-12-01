@@ -7,4 +7,4 @@ WORKDIR /data
 
 RUN uv sync --frozen
 
-CMD ["uv", "run", "python", "src/fill_db.py"]
+CMD ["uv", "run", "python", "-m", "src.fill_db"]

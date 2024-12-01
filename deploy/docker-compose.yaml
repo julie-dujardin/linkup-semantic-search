@@ -37,6 +37,12 @@ services:
       dockerfile: ./deploy/dockerfiles/fill_db/Dockerfile
     networks:
       - db
+    environment:
+      - POSTGRES_DB=vectordb
+      - POSTGRES_USER=vectordb
+      - POSTGRES_PASSWORD=vectordb
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
 
 volumes:
   db-data:

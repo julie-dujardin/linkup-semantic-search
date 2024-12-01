@@ -1,5 +1,5 @@
-from data.src.embedding import Embedder
-from data.src.repository.connection import connect
+from .embedding import Embedder
+from .repository.connection import connect
 
 if __name__ == "__main__":
     embedder = Embedder()

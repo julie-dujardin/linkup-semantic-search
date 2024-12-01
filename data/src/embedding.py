@@ -3,8 +3,8 @@ import torch
 from sqlalchemy import select
 from sentence_transformers import SentenceTransformer
 
-from data.src.repository.models import Article
-from data.src.rss import RssParser
+from .repository.models import Article
+from .rss import RssParser
 
 
 class Embedder:

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from data.src.repository.connection import connect
-from data.src.embedding import Embedder
+from .repository.connection import connect
+from .embedding import Embedder
 
 
 with connect() as session:
@@ -9,11 +9,14 @@ with connect() as session:
 
 
     @app.get("/")
-    async def root():
-        results = embedder.query_db(session, "accident sportif", 5)
+    async def root(query: str, limit: int = 10):
+        results = embedder.query_db(session, query, limit)
         return [{
             "url": r.url,
             "title": r.title,
             "description": r.description,
             "creator": r.creator,
+            "source": r.source,
+            "article": r.article,
+            "published_at": r.published_at,
         } for r in results]

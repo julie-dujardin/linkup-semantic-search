@@ -1,0 +1,16 @@
+services:
+  db:
+    hostname: db
+    image: pgvector/pgvector:pg17
+    ports:
+     - 5433:5432
+    restart: always
+    environment:
+      - POSTGRES_DB=vectordb
+      - POSTGRES_USER=vectordb
+      - POSTGRES_PASSWORD=vectordb
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:

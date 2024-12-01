@@ -2,7 +2,8 @@ import torch
 
 from sentence_transformers import SentenceTransformer
 
-from .rss import RssParser
+from repository.models import Article
+from rss import RssParser
 
 
 class Embedder:
@@ -15,6 +16,26 @@ class Embedder:
         self.articles = RssParser.get_all()
         corpus = [a["article"] for a in self.articles]
         self.embeddings = self.embedder.encode(corpus, convert_to_tensor=True)
+
+    def save_embeddings(self, session):
+        db_articles = []
+
+        for i, article in enumerate(self.articles):
+            db_articles.append(
+                Article(
+                    source=article["source"],
+                    title=article["title"],
+                    description=article["description"],
+                    article=article["article"],
+                    url=article["url"],
+                    creator=article["creator"],
+                    published_at=article["published_at"],
+                    embedding=self.embeddings[i].cpu(),
+                )
+            )
+
+        session.bulk_save_objects(db_articles)
+        session.commit()
 
     def query_corpus(self, query: str) -> list:
         top_k = min(5, len(self.articles))

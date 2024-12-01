@@ -1,9 +1,10 @@
 import torch
 
+from sqlalchemy import select
 from sentence_transformers import SentenceTransformer
 
-from repository.models import Article
-from rss import RssParser
+from data.src.repository.models import Article
+from data.src.rss import RssParser
 
 
 class Embedder:
@@ -19,6 +20,9 @@ class Embedder:
 
     def save_embeddings(self, session):
         db_articles = []
+
+        session.query(Article).delete()
+        session.commit()
 
         for i, article in enumerate(self.articles):
             db_articles.append(
@@ -36,6 +40,12 @@ class Embedder:
 
         session.bulk_save_objects(db_articles)
         session.commit()
+
+    def query_db(self, session, query: str, limit: int | None = 5) -> list:
+        query_embedding = self.embedder.encode(query, convert_to_tensor=True).cpu()
+
+        results = session.scalars(select(Article).order_by(Article.embedding.l2_distance(query_embedding)).limit(limit))
+        return list(results)
 
     def query_corpus(self, query: str) -> list:
         top_k = min(5, len(self.articles))

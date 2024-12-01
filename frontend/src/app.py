@@ -4,7 +4,7 @@ import streamlit as st
 import requests
 
 # Input query
-query = st.text_input('Search')
+query = st.text_input("Search")
 
 # Send query to FastAPI endpoint
 if query:

@@ -25,7 +25,4 @@ class Embedder:
         similarity_scores = self.embedder.similarity(query_embedding, self.embeddings)[0]
         scores, indices = torch.topk(similarity_scores, k=top_k)
 
-        return [
-            {"score": score, "article": self.articles[idx]}
-            for score, idx in zip(scores, indices)
-        ]
+        return [{"score": score, "article": self.articles[idx]} for score, idx in zip(scores, indices)]
